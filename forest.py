@@ -24,17 +24,14 @@ data['Average Turnover'] = monthly_data[turnover_cols].mean(axis=1)
 data['Average Profit'] = monthly_data[profit_cols].mean(axis=1)
 data['Average Employees'] = monthly_data[employee_cols].mean(axis=1)
 data['Std Employees'] = monthly_data[employee_cols].std(axis=1)
-data['Norm Turnover'] = zscore(data['Average Turnover'])
-data['Norm Profit'] = zscore(data['Average Profit'])
-data['Norm Std Employees'] = zscore(data['Std Employees'])
-data['Risk Score'] = (1 / (data['Norm Turnover'] + data['Norm Profit'])) + data['Norm Std Employees']
+data['Risk Score'] = (1 / (data['Average Turnover'] + data['Average Profit'])) + data['Std Employees']
 
 # Encoding the Sector column which is categorical
 le = LabelEncoder()
 data['Sector'] = le.fit_transform(data['Sector'])
 
 # Prepare features and labels
-X = data[['Sector'] + list(monthly_columns) + ['Average Turnover', 'Average Profit', 'Average Employees', 'Std Employees', 'Norm Turnover', 'Norm Profit', 'Norm Std Employees', 'Risk Score']]
+X = data[['Sector'] + list(monthly_columns) + ['Average Turnover', 'Average Profit', 'Average Employees', 'Std Employees', 'Risk Score']]
 y = pd.qcut(data['Risk Score'], 5, labels=['Most Secure', 'Secure', 'Moderate Risky', 'Less Risky', 'Most Risky'])
 
 # Splitting the dataset into training and testing sets
